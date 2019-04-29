@@ -49,7 +49,7 @@ func TestClusterInfoCache_Pod(t *testing.T) {
 	for _, v := range tests {
 		t.Run(v.name, func(tt *testing.T) {
 			stopCh := make(chan struct{})
-			c := newCacheController(clientset, 0, test.NewEnv(t), stopCh)
+			c := newCacheController(clientset, 0, test.NewEnv(t), stopCh, defaultLocalClusterID)
 			defer close(stopCh)
 			go c.Run(stopCh)
 			if !cache.WaitForCacheSync(stopCh, c.HasSynced) {
@@ -103,7 +103,7 @@ func TestClusterInfoCache_Workload_ReplicationController(t *testing.T) {
 	for _, v := range tests {
 		t.Run(v.name, func(tt *testing.T) {
 			stopCh := make(chan struct{})
-			c := newCacheController(clientset, 0, test.NewEnv(t), stopCh)
+			c := newCacheController(clientset, 0, test.NewEnv(t), stopCh, defaultLocalClusterID)
 			defer close(stopCh)
 			go c.Run(stopCh)
 			if !cache.WaitForCacheSync(stopCh, c.HasSynced) {

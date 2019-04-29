@@ -133,6 +133,9 @@ message OutputMsg {
     // Refers to the (controlling) owner of the source pod. Attribute_bindings can refer to this field using $out.source_owner
     string source_owner = 25;
     
+    // Refers to the cluster name where the source pod resides. Attribute_bindings can refer to this field using $out.source_cluster_id
+    string source_cluster_id = 33;
+    
     // Refers to the destination.uid for a pod. This is for TCP use cases where the attribute is not present.
 // attribute_bindings can refer to this field using $out.destination_pod_uid
     string destination_pod_uid = 32;
@@ -169,6 +172,9 @@ message OutputMsg {
     
     // Refers to the Istio workload name for the destination pod. Attribute_bindings can refer to this field using $out.destination_workload_namespace
     string destination_workload_namespace = 29;
+    
+    // Refers to the cluster name where the destination pod resides. Attribute_bindings can refer to this field using $out.destination_cluster_id
+    string destination_cluster_id = 34;
     
 }
 

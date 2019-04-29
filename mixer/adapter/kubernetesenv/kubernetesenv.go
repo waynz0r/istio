@@ -54,6 +54,8 @@ const (
 	defaultRefreshPeriod = 5 * time.Minute
 
 	defaultClusterRegistriesNamespace = "istio-system"
+
+	defaultLocalClusterID = "master"
 )
 
 var (
@@ -139,7 +141,7 @@ func (b *builder) Build(ctx context.Context, env adapter.Env) (adapter.Handler, 
 		if err != nil {
 			return nil, fmt.Errorf("could not build kubernetes client: %v", err)
 		}
-		controller, err = runNewController(b, clientset, env)
+		controller, err = runNewController(b, clientset, env, defaultLocalClusterID)
 		if err != nil {
 			return nil, fmt.Errorf("could not create new cache controller: %v", err)
 		}
@@ -169,12 +171,12 @@ func (b *builder) Build(ctx context.Context, env adapter.Env) (adapter.Handler, 
 	return &kubeHandler, nil
 }
 
-func runNewController(b *builder, clientset k8s.Interface, env adapter.Env) (cacheController, error) {
+func runNewController(b *builder, clientset k8s.Interface, env adapter.Env, clusterID string) (cacheController, error) {
 	paramsProto := b.adapterConfig
 	stopChan := make(chan struct{})
 	refresh := paramsProto.CacheRefreshDuration
 
-	controller := newCacheController(clientset, refresh, env, stopChan)
+	controller := newCacheController(clientset, refresh, env, stopChan, clusterID)
 	env.ScheduleDaemon(func() { controller.Run(stopChan) })
 
 	// ensure that any request is only handled after
@@ -307,6 +309,8 @@ func (h *handler) fillDestinationAttrs(c cacheController, p *v1.Pod, port int64,
 		o.SetDestinationHostIp(net.ParseIP(p.Status.HostIP))
 	}
 
+	o.SetDestinationClusterId(c.GetClusterID())
+
 	wl := c.Workload(p)
 	o.SetDestinationWorkloadUid(wl.uid)
 	o.SetDestinationWorkloadName(wl.name)
@@ -343,6 +347,8 @@ func (h *handler) fillSourceAttrs(c cacheController, p *v1.Pod, o *ktmpl.Output)
 		o.SetSourceHostIp(net.ParseIP(p.Status.HostIP))
 	}
 
+	o.SetSourceClusterId(c.GetClusterID())
+
 	wl := c.Workload(p)
 	o.SetSourceWorkloadUid(wl.uid)
 	o.SetSourceWorkloadName(wl.name)
@@ -362,7 +368,7 @@ func newKubernetesClient(kubeconfigPath string, env adapter.Env) (k8s.Interface,
 }
 
 func (b *builder) createCacheController(k8sInterface k8s.Interface, clusterID string) error {
-	controller, err := runNewController(b, k8sInterface, b.kubeHandler.env)
+	controller, err := runNewController(b, k8sInterface, b.kubeHandler.env, clusterID)
 	if err == nil {
 		b.Lock()
 		b.controllers[clusterID] = controller

@@ -38,14 +38,16 @@ type (
 		Workload(*v1.Pod) workload
 		HasSynced() bool
 		StopControlChannel()
+		GetClusterID() string
 	}
 
 	controllerImpl struct {
-		env      adapter.Env
-		stopChan chan struct{}
-		pods     cache.SharedIndexInformer
-		rs       cache.SharedIndexInformer
-		rc       cache.SharedIndexInformer
+		env       adapter.Env
+		stopChan  chan struct{}
+		pods      cache.SharedIndexInformer
+		rs        cache.SharedIndexInformer
+		rc        cache.SharedIndexInformer
+		clusterID string
 	}
 
 	workload struct {
@@ -69,7 +71,7 @@ func podIP(obj interface{}) ([]string, error) {
 // Responsible for setting up the cacheController, based on the supplied client.
 // It configures the index informer to list/watch k8sCache and send update events
 // to a mutations channel for processing (in this case, logging).
-func newCacheController(clientset kubernetes.Interface, refreshDuration time.Duration, env adapter.Env, stopChan chan struct{}) cacheController {
+func newCacheController(clientset kubernetes.Interface, refreshDuration time.Duration, env adapter.Env, stopChan chan struct{}, clusterID string) cacheController {
 	sharedInformers := informers.NewSharedInformerFactory(clientset, refreshDuration)
 	podInformer := sharedInformers.Core().V1().Pods().Informer()
 	podInformer.AddIndexers(cache.Indexers{
@@ -77,11 +79,12 @@ func newCacheController(clientset kubernetes.Interface, refreshDuration time.Dur
 	})
 
 	return &controllerImpl{
-		env:      env,
-		stopChan: stopChan,
-		pods:     podInformer,
-		rs:       sharedInformers.Apps().V1().ReplicaSets().Informer(),
-		rc:       sharedInformers.Core().V1().ReplicationControllers().Informer(),
+		env:       env,
+		stopChan:  stopChan,
+		pods:      podInformer,
+		rs:        sharedInformers.Apps().V1().ReplicaSets().Informer(),
+		rc:        sharedInformers.Core().V1().ReplicationControllers().Informer(),
+		clusterID: clusterID,
 	}
 }
 
@@ -126,6 +129,10 @@ func (c *controllerImpl) Pod(podKey string) (*v1.Pod, bool) {
 		return nil, false
 	}
 	return item.(*v1.Pod), true
+}
+
+func (c *controllerImpl) GetClusterID() string {
+	return c.clusterID
 }
 
 func key(namespace, name string) string {

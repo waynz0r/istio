@@ -270,6 +270,10 @@ var (
 							ValueType: istio_policy_v1beta1.STRING,
 						},
 
+						"adapter_template_kubernetes.output.source_cluster_id": {
+							ValueType: istio_policy_v1beta1.STRING,
+						},
+
 						"adapter_template_kubernetes.output.destination_pod_uid": {
 							ValueType: istio_policy_v1beta1.STRING,
 						},
@@ -315,6 +319,10 @@ var (
 						},
 
 						"adapter_template_kubernetes.output.destination_workload_namespace": {
+							ValueType: istio_policy_v1beta1.STRING,
+						},
+
+						"adapter_template_kubernetes.output.destination_cluster_id": {
 							ValueType: istio_policy_v1beta1.STRING,
 						},
 					},
@@ -390,6 +398,10 @@ var (
 
 								return out.SourceOwner, true
 
+							case "source_cluster_id":
+
+								return out.SourceClusterId, true
+
 							case "destination_pod_uid":
 
 								return out.DestinationPodUid, true
@@ -437,6 +449,10 @@ var (
 							case "destination_workload_namespace":
 
 								return out.DestinationWorkloadNamespace, true
+
+							case "destination_cluster_id":
+
+								return out.DestinationClusterId, true
 
 							default:
 								return nil, false

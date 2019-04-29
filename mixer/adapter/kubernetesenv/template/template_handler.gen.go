@@ -89,7 +89,7 @@ type Instance struct {
 //
 // OutputTemplate refers to the output from the adapter. It is used inside the attribute_binding section of the config
 // to assign values to the generated attributes using the `$out.<field name of the OutputTemplate>` syntax.
-// Next ID: 33
+// Next ID: 35
 type Output struct {
 	fieldsSet map[string]bool
 
@@ -127,6 +127,9 @@ type Output struct {
 	// Refers to the (controlling) owner of the source pod. Attribute_bindings can refer to this field using $out.source_owner
 	SourceOwner string
 
+	// Refers to the cluster name where the source pod resides. Attribute_bindings can refer to this field using $out.source_cluster_id
+	SourceClusterId string
+
 	// Refers to the destination.uid for a pod. This is for TCP use cases where the attribute is not present.
 	// attribute_bindings can refer to this field using $out.destination_pod_uid
 	DestinationPodUid string
@@ -163,6 +166,9 @@ type Output struct {
 
 	// Refers to the Istio workload name for the destination pod. Attribute_bindings can refer to this field using $out.destination_workload_namespace
 	DestinationWorkloadNamespace string
+
+	// Refers to the cluster name where the destination pod resides. Attribute_bindings can refer to this field using $out.destination_cluster_id
+	DestinationClusterId string
 }
 
 func NewOutput() *Output {
@@ -224,6 +230,11 @@ func (o *Output) SetSourceOwner(val string) {
 	o.SourceOwner = val
 }
 
+func (o *Output) SetSourceClusterId(val string) {
+	o.fieldsSet["source_cluster_id"] = true
+	o.SourceClusterId = val
+}
+
 func (o *Output) SetDestinationPodUid(val string) {
 	o.fieldsSet["destination_pod_uid"] = true
 	o.DestinationPodUid = val
@@ -282,6 +293,11 @@ func (o *Output) SetDestinationWorkloadName(val string) {
 func (o *Output) SetDestinationWorkloadNamespace(val string) {
 	o.fieldsSet["destination_workload_namespace"] = true
 	o.DestinationWorkloadNamespace = val
+}
+
+func (o *Output) SetDestinationClusterId(val string) {
+	o.fieldsSet["destination_cluster_id"] = true
+	o.DestinationClusterId = val
 }
 
 func (o *Output) WasSet(field string) bool {

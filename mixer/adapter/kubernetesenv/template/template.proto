@@ -82,7 +82,7 @@ message Template {
 
 // OutputTemplate refers to the output from the adapter. It is used inside the attribute_binding section of the config
 // to assign values to the generated attributes using the `$out.<field name of the OutputTemplate>` syntax.
-// Next ID: 33
+// Next ID: 35
 message OutputTemplate {
     reserved 5, 12, 15, 16, 17, 18, 19, 21;
 
@@ -120,6 +120,9 @@ message OutputTemplate {
     // Refers to the (controlling) owner of the source pod. Attribute_bindings can refer to this field using $out.source_owner
     string source_owner = 25;
 
+    // Refers to the cluster name where the source pod resides. Attribute_bindings can refer to this field using $out.source_cluster_id
+    string source_cluster_id = 33;
+
     // Refers to the destination.uid for a pod. This is for TCP use cases where the attribute is not present.
     // attribute_bindings can refer to this field using $out.destination_pod_uid
     string destination_pod_uid = 32;
@@ -156,4 +159,7 @@ message OutputTemplate {
 
     // Refers to the Istio workload name for the destination pod. Attribute_bindings can refer to this field using $out.destination_workload_namespace
     string destination_workload_namespace = 29;
+
+    // Refers to the cluster name where the destination pod resides. Attribute_bindings can refer to this field using $out.destination_cluster_id
+    string destination_cluster_id = 34;
 }

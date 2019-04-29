@@ -222,6 +222,7 @@ func TestKubegen_Generate(t *testing.T) {
 	testPodToNoControllerPodOut.SetSourceWorkloadName("test-deployment")
 	testPodToNoControllerPodOut.SetSourceWorkloadNamespace("testns")
 	testPodToNoControllerPodOut.SetSourceWorkloadUid("istio://testns/workloads/test-deployment")
+	testPodToNoControllerPodOut.SetSourceClusterId("master")
 	testPodToNoControllerPodOut.SetDestinationPodName("no-controller-pod")
 	testPodToNoControllerPodOut.SetDestinationNamespace("testns")
 	testPodToNoControllerPodOut.SetDestinationPodUid("kubernetes://no-controller-pod.testns")
@@ -230,6 +231,7 @@ func TestKubegen_Generate(t *testing.T) {
 	testPodToNoControllerPodOut.SetDestinationWorkloadName("no-controller-pod")
 	testPodToNoControllerPodOut.SetDestinationWorkloadNamespace("testns")
 	testPodToNoControllerPodOut.SetDestinationWorkloadUid("istio://testns/workloads/no-controller-pod")
+	testPodToNoControllerPodOut.SetDestinationClusterId("master")
 
 	altTestPodToAltTestPod2In := &kubernetes_apa_tmpl.Instance{
 		SourceUid:      "kubernetes://alt-test-pod.testns",
@@ -245,6 +247,7 @@ func TestKubegen_Generate(t *testing.T) {
 	altTestPodToAltTestPod2Out.SetSourceWorkloadName("test-deployment")
 	altTestPodToAltTestPod2Out.SetSourceWorkloadNamespace("testns")
 	altTestPodToAltTestPod2Out.SetSourceWorkloadUid("istio://testns/workloads/test-deployment")
+	altTestPodToAltTestPod2Out.SetSourceClusterId("master")
 	altTestPodToAltTestPod2Out.SetDestinationLabels(map[string]string{"app": "some-app"})
 	altTestPodToAltTestPod2Out.SetDestinationPodName("alt-test-pod-2")
 	altTestPodToAltTestPod2Out.SetDestinationNamespace("testns")
@@ -253,6 +256,7 @@ func TestKubegen_Generate(t *testing.T) {
 	altTestPodToAltTestPod2Out.SetDestinationWorkloadName("test-deployment")
 	altTestPodToAltTestPod2Out.SetDestinationWorkloadNamespace("testns")
 	altTestPodToAltTestPod2Out.SetDestinationWorkloadUid("istio://testns/workloads/test-deployment")
+	altTestPodToAltTestPod2Out.SetDestinationClusterId("master")
 
 	daemonsetToReplicationControllerIn := &kubernetes_apa_tmpl.Instance{
 		SourceUid:      "kubernetes://pod-daemonset.testns",
@@ -268,6 +272,7 @@ func TestKubegen_Generate(t *testing.T) {
 	daemonsetToReplicaControllerOut.SetSourceWorkloadName("test-daemonset")
 	daemonsetToReplicaControllerOut.SetSourceWorkloadNamespace("testns")
 	daemonsetToReplicaControllerOut.SetSourceWorkloadUid("istio://testns/workloads/test-daemonset")
+	daemonsetToReplicaControllerOut.SetSourceClusterId("master")
 	daemonsetToReplicaControllerOut.SetDestinationPodName("pod-replicationcontroller")
 	daemonsetToReplicaControllerOut.SetDestinationNamespace("testns")
 	daemonsetToReplicaControllerOut.SetDestinationPodUid("kubernetes://pod-replicationcontroller.testns")
@@ -276,6 +281,7 @@ func TestKubegen_Generate(t *testing.T) {
 	daemonsetToReplicaControllerOut.SetDestinationWorkloadName("test-replicationcontroller")
 	daemonsetToReplicaControllerOut.SetDestinationWorkloadNamespace("testns")
 	daemonsetToReplicaControllerOut.SetDestinationWorkloadUid("istio://testns/workloads/test-replicationcontroller")
+	daemonsetToReplicaControllerOut.SetDestinationClusterId("master")
 
 	ipDestinationSvcIn := &kubernetes_apa_tmpl.Instance{
 		SourceUid:     "kubernetes://pod-job.testns",
@@ -290,6 +296,7 @@ func TestKubegen_Generate(t *testing.T) {
 	ipDestinationOut.SetSourceWorkloadNamespace("testns")
 	ipDestinationOut.SetSourceWorkloadUid("istio://testns/workloads/test-job")
 	ipDestinationOut.SetSourceOwner("kubernetes://apis/batch/v1/namespaces/testns/jobs/test-job")
+	ipDestinationOut.SetSourceClusterId("master")
 	ipDestinationOut.SetDestinationLabels(map[string]string{"app": "ipAddr"})
 	ipDestinationOut.SetDestinationNamespace("testns")
 	ipDestinationOut.SetDestinationPodName("ip-svc-pod")
@@ -299,6 +306,7 @@ func TestKubegen_Generate(t *testing.T) {
 	ipDestinationOut.SetDestinationWorkloadName("test-deployment")
 	ipDestinationOut.SetDestinationWorkloadNamespace("testns")
 	ipDestinationOut.SetDestinationWorkloadUid("istio://testns/workloads/test-deployment")
+	ipDestinationOut.SetDestinationClusterId("master")
 
 	notFoundToNoControllerIn := &kubernetes_apa_tmpl.Instance{
 		SourceUid:      "kubernetes://not-found-pod.testns",
@@ -317,6 +325,7 @@ func TestKubegen_Generate(t *testing.T) {
 	notFoundToNoControllerOut.SetDestinationWorkloadName("test-deployment")
 	notFoundToNoControllerOut.SetDestinationWorkloadNamespace("testns")
 	notFoundToNoControllerOut.SetDestinationWorkloadUid("istio://testns/workloads/test-deployment")
+	notFoundToNoControllerOut.SetDestinationClusterId("master")
 
 	notKubernetesIn := &kubernetes_apa_tmpl.Instance{
 		SourceUid: "something-else://other-scheme",
@@ -336,6 +345,7 @@ func TestKubegen_Generate(t *testing.T) {
 	ipToReplicaSetSvcOut.SetSourceWorkloadName("test-deployment")
 	ipToReplicaSetSvcOut.SetSourceWorkloadNamespace("testns")
 	ipToReplicaSetSvcOut.SetSourceWorkloadUid("istio://testns/workloads/test-deployment")
+	ipToReplicaSetSvcOut.SetSourceClusterId("master")
 	ipToReplicaSetSvcOut.SetDestinationLabels(map[string]string{"app": "some-app"})
 	ipToReplicaSetSvcOut.SetDestinationNamespace("testns")
 	ipToReplicaSetSvcOut.SetDestinationOwner("kubernetes://apis/apps/v1/namespaces/testns/replicasets/not-found-replicaset")
@@ -344,6 +354,7 @@ func TestKubegen_Generate(t *testing.T) {
 	ipToReplicaSetSvcOut.SetDestinationWorkloadName("not-found-replicaset")
 	ipToReplicaSetSvcOut.SetDestinationWorkloadNamespace("testns")
 	ipToReplicaSetSvcOut.SetDestinationWorkloadUid("istio://testns/workloads/not-found-replicaset")
+	ipToReplicaSetSvcOut.SetDestinationClusterId("master")
 
 	replicasetToReplicaSetIn := &kubernetes_apa_tmpl.Instance{
 		DestinationUid: "kubernetes://extv1beta1-replicaset-with-no-deployment-pod.testns",
@@ -359,6 +370,7 @@ func TestKubegen_Generate(t *testing.T) {
 	replicaSetToReplicaSetOut.SetSourceWorkloadName("not-found-replicaset")
 	replicaSetToReplicaSetOut.SetSourceWorkloadNamespace("testns")
 	replicaSetToReplicaSetOut.SetSourceWorkloadUid("istio://testns/workloads/not-found-replicaset")
+	replicaSetToReplicaSetOut.SetSourceClusterId("master")
 	replicaSetToReplicaSetOut.SetDestinationLabels(map[string]string{"app": "some-app"})
 	replicaSetToReplicaSetOut.SetDestinationNamespace("testns")
 	replicaSetToReplicaSetOut.SetDestinationOwner("kubernetes://apis/extensions/v1beta1/namespaces/testns/replicasets/test-replicaset-without-deployment")
@@ -367,6 +379,7 @@ func TestKubegen_Generate(t *testing.T) {
 	replicaSetToReplicaSetOut.SetDestinationWorkloadName("test-replicaset-without-deployment")
 	replicaSetToReplicaSetOut.SetDestinationWorkloadNamespace("testns")
 	replicaSetToReplicaSetOut.SetDestinationWorkloadUid("istio://testns/workloads/test-replicaset-without-deployment")
+	replicaSetToReplicaSetOut.SetDestinationClusterId("master")
 
 	containerNameIn := &kubernetes_apa_tmpl.Instance{
 		DestinationUid:  "kubernetes://pod-with-container.testns",
@@ -384,6 +397,7 @@ func TestKubegen_Generate(t *testing.T) {
 	containerNameOut.SetSourceWorkloadName("test-deployment")
 	containerNameOut.SetSourceWorkloadNamespace("testns")
 	containerNameOut.SetSourceWorkloadUid("istio://testns/workloads/test-deployment")
+	containerNameOut.SetSourceClusterId("master")
 	containerNameOut.SetDestinationLabels(map[string]string{"app": "container"})
 	containerNameOut.SetDestinationNamespace("testns")
 	containerNameOut.SetDestinationOwner("kubernetes://apis/apps/v1/namespaces/testns/deployments/test-container-deployment")
@@ -393,6 +407,7 @@ func TestKubegen_Generate(t *testing.T) {
 	containerNameOut.SetDestinationWorkloadName("test-container-deployment")
 	containerNameOut.SetDestinationWorkloadNamespace("testns")
 	containerNameOut.SetDestinationWorkloadUid("istio://testns/workloads/test-container-deployment")
+	containerNameOut.SetDestinationClusterId("master")
 
 	ipToDeploymentConfigIn := &kubernetes_apa_tmpl.Instance{
 		SourceIp:       net.ParseIP("192.168.234.3"),
@@ -409,6 +424,7 @@ func TestKubegen_Generate(t *testing.T) {
 	ipToDeploymentConfigOut.SetSourceWorkloadName("test-deployment")
 	ipToDeploymentConfigOut.SetSourceWorkloadNamespace("testns")
 	ipToDeploymentConfigOut.SetSourceWorkloadUid("istio://testns/workloads/test-deployment")
+	ipToDeploymentConfigOut.SetSourceClusterId("master")
 	ipToDeploymentConfigOut.SetDestinationPodName("pod-deploymentconfig")
 	ipToDeploymentConfigOut.SetDestinationNamespace("testns")
 	ipToDeploymentConfigOut.SetDestinationPodUid("kubernetes://pod-deploymentconfig.testns")
@@ -417,6 +433,7 @@ func TestKubegen_Generate(t *testing.T) {
 	ipToDeploymentConfigOut.SetDestinationWorkloadName("test-deploymentconfig")
 	ipToDeploymentConfigOut.SetDestinationWorkloadNamespace("testns")
 	ipToDeploymentConfigOut.SetDestinationWorkloadUid("istio://testns/workloads/test-deploymentconfig")
+	ipToDeploymentConfigOut.SetDestinationClusterId("master")
 
 	tests := []struct {
 		name   string
